@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package grp1;
+
+message StdAsk {
+    bytes AskMsg = 1;
+}
+
+message StdRet {
+    bytes RetSta = 1;
+    bytes RetMsg  = 2;
+}
+
+service Grp1 {
+    rpc StdRpc (StdAsk) returns (StdRet) {}
+}
