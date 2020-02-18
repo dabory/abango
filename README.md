@@ -16,21 +16,24 @@ is a golang web framework which supports Kafka, gRpc and RESTful API at the same
 
 `$ go get github.com/pilu/fresh`
 
+`$ go get github.com/labstack/echo`
+
 `$ go get github.com/go-sql-driver/mysql`
 
 `$ go get github.com/dabory/abango`
 
 `$ mkdir -p $GOPATH/bin $GOPATH/src $GOPATH/pkg`
 
+`$ cd $GOPATH/src/github.com/dabory/kafka-docker`
+
 `$ go get github.com/dabory/svc-abango `
 
 `$ go get github.com/dabory/end-abango `
 
-`$ cd $GOPATH/src/github.com/dabory/end-abango`
 
-`$ cd $GOPATH/src/github.com/dabory/kafka-docker`
+#### Step 3: Run kafka service (Not necessary if using gRpc and REST API only)
 
-#### Step 3: You should run Kafka API first if you want to use Kafka
+To run Apache Kafka, use this command in one terminal mode
 
 `$ cd $GOPATH/src/github.com/dabory/kafka-docker`
 
@@ -38,20 +41,25 @@ is a golang web framework which supports Kafka, gRpc and RESTful API at the same
 
 
 #### Step 4: Run abango service 
+
+To run service, use this command in another terminal mode
+
 `$ cd $GOPATH/src/github.com/dabory/svc-abango`
 
-`$ vi conf/config_select.json` ; specify config.json file
+`$ vi conf/config_select.json` ....... ; specify config.json file
 
-`$ vi conf/xxx_config.json`  ; change parameter values liked conf file
+`$ vi conf/xxx_config.json`  ....... ; change parameter values liked conf file
 
-#### Step 4: Change Open port if you need in conf/ folder files
-
-
+`$ fresh`   ....... ; run service
 
 
+#### Step 5: To test end-point request and service running
+To run request, use this command in the other terminal mode
 
-#### Step 5: Run docker-composein Kafka folder
-To run the server, use this command
+`$ cd $GOPATH/src/github.com/dabory/end-abango`
 
-`$ fresh`
+`$ vi conf/config_select.json` ....... ; specify config.json file
 
+`$ vi conf/xxx_config.json`  ....... ; change parameter and select service api
+
+`$ go run main.go login` ....... ; run a request and it returns same value
