@@ -4,6 +4,27 @@
 ### Abango
 is a golang web framework which supports Kafka, gRpc and RESTful API at the same time in single/multi thread.
 
+
+## Supported Go versions
+
+- 1.9.7+
+- 1.10.3+
+- 1.11+
+
+Any of these versions will allow you to import Echo as github.com/dabory/abango which is the recommended way of using abango going forward.
+
+## Feature Overview
+
+- Supports Apache Kafka ( 1 to many - similar like gRpc API )
+- Extensible middleware framework with Echo framework (temporary before adding on in-house REST API )
+- supports gRpc API 
+- supports REST API powered by Echo framework in go lang
+
+## Credits
+
+- Eric Kim (김호익) - Author - kimhi65@gmial.com
+
+
 ### Abango Quick Start
 
 #### Step 1: Linux: Ubuntu 16.04.4 LTS \n \l  : recommended Linux version
