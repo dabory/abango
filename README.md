@@ -11,7 +11,7 @@ is a golang web framework which supports Kafka, gRpc and RESTful API at the same
 - 1.10.3+
 - 1.11+
 
-Any of these versions will allow you to import Echo as github.com/dabory/abango which is the recommended way of using abango going forward.
+Any of these versions will allow you to import Abango as github.com/dabory/abango which is the recommended way of using abang.
 
 ## Feature Overview
 
