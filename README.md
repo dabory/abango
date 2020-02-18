@@ -16,7 +16,6 @@ Any of these versions will allow you to import Echo as github.com/dabory/abango 
 ## Feature Overview
 
 - Supports Apache Kafka ( 1 to many - similar like gRpc API )
-- Extensible middleware framework with Echo framework (temporary before adding on in-house REST API )
 - supports gRpc API 
 - supports REST API powered by Echo framework in go lang
 
