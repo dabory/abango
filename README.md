@@ -4,10 +4,11 @@
 ### Abango
 is a golang web framework which supports Kafka, gRpc and RESTful API at the same time in single/multi thread.
 
+### Abango Quick Start
 
-#### Step 0: Linux: Ubuntu 16.04.4 LTS \n \l  : recommended Linux version
-#### Step 1: Install: Go version go1.11 linux/amd64
-#### Step 2: Install: Go libraries
+#### Step 1: Linux: Ubuntu 16.04.4 LTS \n \l  : recommended Linux version
+#### Step 2: Install: Go version go1.11 linux/amd64
+#### Step 3: Install: Go libraries
 `$ go get -u google.golang.org/grpc`
 
 `$ go get -u github.com/golang/protobuf/protoc-gen-go`
@@ -22,16 +23,14 @@ is a golang web framework which supports Kafka, gRpc and RESTful API at the same
 
 `$ go get github.com/dabory/abango`
 
-`$ mkdir -p $GOPATH/bin $GOPATH/src $GOPATH/pkg`
-
-`$ cd $GOPATH/src/github.com/dabory/kafka-docker`
+`$ go get github.com/dabory/kafka-docker`
 
 `$ go get github.com/dabory/svc-abango `
 
 `$ go get github.com/dabory/end-abango `
 
 
-#### Step 3: Run kafka service (Not necessary if using gRpc and REST API only)
+#### Step 4: Run kafka service (Not necessary if using gRpc and REST API only)
 
 To run Apache Kafka, use this command in one terminal mode
 
@@ -40,7 +39,7 @@ To run Apache Kafka, use this command in one terminal mode
 `$ docker-compose up`
 
 
-#### Step 4: Run abango service 
+#### Step 5: Run abango service 
 
 To run service, use this command in another terminal mode
 
@@ -53,7 +52,7 @@ To run service, use this command in another terminal mode
 `$ fresh`   ....... ; run service
 
 
-#### Step 5: To test end-point request and service running
+#### Step 6: To test end-point request and service running
 To run request, use this command in the other terminal mode
 
 `$ cd $GOPATH/src/github.com/dabory/end-abango`
