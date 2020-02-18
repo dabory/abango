@@ -1,7 +1,5 @@
 # abango
-
-
-# How to user example of abango service ; Svc-abango
+# Microservices Framework to support Apache Kafka, Google gRpc and Legacy REST API
 
 ## Abango
 is a golang web framework which supports Kafka, gRpc and RESTful API at the same time in single/multi thread.
