@@ -82,6 +82,9 @@ To run request, use this command in the other terminal mode
 
 - `$ go run main.go login` ....... ; run a request and it returns same value
 
+
+## Description of Operations in each APIs combined.
+
 ### Kafka API Procedure
 It is crucial in Kafka messaging service to syncronize producing messages and acquire return messages from backend as RESTful API and gRpc API do.
 
