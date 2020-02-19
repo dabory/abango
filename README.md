@@ -83,6 +83,6 @@ To run request, use this command in the other terminal mode
 - `$ go run main.go login` ....... ; run a request and it returns same value
 
 ### Kafka API Procedure
-is a golang web framework which supports Kafka, gRpc and RESTful API at the same time in single/multi thread.
+It is crucial in Kafka messaging service to syncronize producing messages and acquire return messages from backend as RESTful API and gRpc API do.
 
 ![kkk plan](./images/kafka-procedure.png)
