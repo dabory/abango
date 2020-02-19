@@ -4,8 +4,6 @@
 ### Abango
 is a golang web framework which supports Kafka, gRpc and RESTful API at the same time in single/multi thread.
 
-![kkk plan](./images/kafka-procedure.png)
-
 ## Supported Go versions
 
 - 1.9.7+
@@ -83,3 +81,8 @@ To run request, use this command in the other terminal mode
 - `$ vi conf/xxx_config.json`  ....... ; change parameter and select service api
 
 - `$ go run main.go login` ....... ; run a request and it returns same value
+
+### Kafka API Procedure
+is a golang web framework which supports Kafka, gRpc and RESTful API at the same time in single/multi thread.
+
+![kkk plan](./images/kafka-procedure.png)
