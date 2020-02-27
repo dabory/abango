@@ -36,7 +36,7 @@ type Context struct {
 
 type AbangoAsk struct {
 	ApiType      string
-	AuthToken    string
+	AccessToken  string
 	AskName      string
 	UniqueId     string
 	Body         []byte

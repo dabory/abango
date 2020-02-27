@@ -18,6 +18,15 @@ Any of these versions will allow you to import Abango as github.com/dabory/abang
 - supports gRpc API 
 - supports REST API powered by Echo framework in go lang
 
+## Development Material
+
+- gRpc from Google
+- Echo - the best RESTful API in golang so far
+- Kafka-Docker
+- Sarama - Golang library for Kafka written by Shopify
+- Xorm - Simple and strong ORM written in Golang
+- Python Django, Golang Beego - Inspire to give birth to Abango.
+
 ## Credits
 
 - Eric Kim (김호익) - Author - kimhi65@gmial.com
