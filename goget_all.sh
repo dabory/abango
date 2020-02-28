@@ -8,3 +8,5 @@ go get github.com/dabory/abango
 go get github.com/dabory/kafka-docker
 go get github.com/dabory/svc-abango 
 go get github.com/dabory/end-abango 
+go get github.com/dabory/xorm
+go get github.com/go-xorm/xorm
