@@ -69,7 +69,7 @@ To run Apache Kafka, use this command in one terminal mode
 
 - `$ git clone https://github.com/dabory/kafka-docker`
 
-- `$ cd $GOPATH/src/github.com/dabory/kafka-docker`
+- `$ cd $GOPATH/src/kafka-docker`
 
 - `$ docker-compose up`
 
