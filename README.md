@@ -57,10 +57,19 @@ Any of these versions will allow you to import Abango as github.com/dabory/abang
 
 - `$ go get github.com/dabory/end-abango `
 
+- `$ go get github.com/go-xorm/xorm `
+
+### !! Instal shell file is here 
+[Google](./goget_all.sh) 
+
 
 #### Step 4: Run kafka service (Not necessary if using gRpc and REST API only)
 
 To run Apache Kafka, use this command in one terminal mode
+
+- `$ cd $GOPATH/src/`
+
+- `$ git clone https://github.com/dabory/kafka-docker`
 
 - `$ cd $GOPATH/src/github.com/dabory/kafka-docker`
 
