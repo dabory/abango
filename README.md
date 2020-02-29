@@ -80,7 +80,7 @@ To run service, use this command in another terminal mode
 
 - `$ cd $GOPATH/src/github.com/dabory/svc-abango`
 
-- `$ vi conf/config_select.json` ....... ; specify config.json file
+- `$ vi conf/config_select.json` ....... ; specify config.json file which has xxx prefix in file name
 
 - `$ vi conf/xxx_config.json`  ....... ; change parameter values linked conf file if necessary
 
@@ -92,7 +92,7 @@ To run request, use this command in the other terminal mode
 
 - `$ cd $GOPATH/src/github.com/dabory/end-abango`
 
-- `$ vi conf/config_select.json` ....... ; specify config.json file
+- `$ vi conf/config_select.json` ....... ; specify config.json file which has xxx prefix in file name
 
 - `$ vi conf/xxx_config.json`  ....... ; change parameter and select service api if necessary
 
