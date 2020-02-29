@@ -82,7 +82,7 @@ To run service, use this command in another terminal mode
 
 - `$ vi conf/config_select.json` ....... ; specify config.json file
 
-- `$ vi conf/xxx_config.json`  ....... ; change parameter values liked conf file
+- `$ vi conf/xxx_config.json`  ....... ; change parameter values linked conf file if necessary
 
 - `$ fresh`   ....... ; run service
 
@@ -94,7 +94,7 @@ To run request, use this command in the other terminal mode
 
 - `$ vi conf/config_select.json` ....... ; specify config.json file
 
-- `$ vi conf/xxx_config.json`  ....... ; change parameter and select service api
+- `$ vi conf/xxx_config.json`  ....... ; change parameter and select service api if necessary
 
 - `$ go run main.go login` ....... ; run a request and it returns same value
 
