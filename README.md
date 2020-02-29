@@ -98,6 +98,16 @@ To run request, use this command in the other terminal mode
 
 - `$ go run main.go login` ....... ; run a request and it returns same value
 
+##### You will get : 
+[ReturnStatus: 200  ReturnJsonFile: json-receive/login.json]
+
+[{
+
+    "UserId": "admin",
+    "Password": "admin-password"
+
+}]
+
 
 ## Description of Operations in each APIs combined.
 
