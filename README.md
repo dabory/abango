@@ -59,7 +59,7 @@ Any of these versions will allow you to import Abango as github.com/dabory/abang
 
 - `$ go get github.com/go-xorm/xorm `
 
-### !! Here is install shell file for Go librariesis: [goget_all.sh](./goget_all.sh)
+### * Here is install shell file for Go librariesis: [goget_all.sh](./goget_all.sh)
 
 #### Step 4: Run kafka service (Not necessary if using gRpc and REST API only)
 
