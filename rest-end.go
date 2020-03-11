@@ -16,7 +16,6 @@ func RestRequest(v *AbangoAsk) (string, string, error) {
 	}
 
 	apiMethod := strings.ToUpper(svars["api_method"])
-	// e.Tp(apiMethod)
 	if apiMethod == "" { // Default is POST
 		apiMethod = "POST"
 	}

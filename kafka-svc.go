@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	e "github.com/dabory/abango/etc"
 	"github.com/Shopify/sarama"
+	e "github.com/dabory/abango/etc"
 )
 
 //////////// Kafka Service /////////////
@@ -43,6 +43,7 @@ func KafkaSvcStandBy(RouterHandler func(*AbangoAsk)) {
 					fmt.Println(err)
 				case msg := <-consumer.Messages():
 					var v AbangoAsk
+					e.Tp(msg.Value)
 					if err := json.Unmarshal(msg.Value, &v); err == nil {
 						e.OkLog("Kafka API [" + v.AskName + "]-[" + topic + "]-[" + v.UniqueId + "]")
 						RouterHandler(&v)

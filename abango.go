@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"os"
 	"strings"
-	time "time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 )
 import "sync"
 import e "github.com/dabory/abango/etc"
@@ -52,17 +50,6 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 	// GrpcSvcStandBy(GrpcHandler)
 
 	var wg sync.WaitGroup
-
-	// wg.Add(1)
-	// go func() {
-	// 	GrpcSvcStandBy(GrpcHandler)
-	// 	wg.Done()
-	// }()
-	// wg.Add(1)
-	// go func() {
-	// 	RestSvcStandBy(RestHandler)
-	// 	wg.Done()
-	// }()
 
 	e.AokLog("Abango Clustered Framework Started !")
 	if err := GetXConfig(); err == nil {
@@ -145,7 +132,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error)) error {
 					}
 				}
 				if retstr, retsta, err := MsgHandler(&v); err == nil {
-					e.Tp("ReturnStatus: " + retsta + "  ReturnJsonFile: " + jsonreceive)
+					e.Tp("Status: " + retsta + "  ReturnJsonFile: " + jsonreceive)
 					e.StrToFile(jsonreceive, retstr)
 					if XConfig["ShowReceivedJson"] == "Yes" {
 						e.Tp(retstr)
@@ -164,33 +151,6 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error)) error {
 	}
 
 	return nil
-}
-
-func Run(params ...string) { //Kangan only
-
-	if err := GetEnvConf(); err == nil {
-		db, err := xorm.NewEngine(XEnv.DbType, XEnv.DbStr)
-		// db, err := xorm.NewEngine(XEnv.DbType, "root:root@tcp(127.0.0.1:3306)/kangan?charset=utf8&parseTime=True")
-
-		dbStr := XEnv.DbType + ":(" + XEnv.DbHost + ":" + XEnv.DbPort + ")->[" + XEnv.DbPrefix + XEnv.DbName + "] DB Schema"
-		if err == nil {
-			e.OkLog(dbStr)
-		} else {
-			e.MyErr(dbStr, err, true)
-			// panic(fmt.Errorf("Database open error: %s \n", err))
-		}
-
-		db.ShowSQL(false)
-		db.SetMaxOpenConns(100)
-		db.SetMaxIdleConns(20)
-		db.SetConnMaxLifetime(60 * time.Second)
-		if _, err := db.IsTableExist("aaa"); err != nil { //Connect Check
-			e.MyErr("DATABASE DISCONNECTED", err, true)
-		} else {
-			e.OkLog("DATABASE CONNECTED")
-		}
-		XDB = db
-	}
 }
 
 func GetEnvConf() error { // Kangan only

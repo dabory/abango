@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	e "github.com/dabory/abango/etc"
 	"github.com/Shopify/sarama"
+	e "github.com/dabory/abango/etc"
 )
 
 //////////// Kafka EndPoint /////////////
@@ -31,12 +31,12 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 		TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
 		timeout := int64(TmpInt)
 		if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
-			return msg, "200", nil // Normal Retrun
+			return msg, "202", nil // Normal Retrun
 		} else {
-			return "", "K503", err //Servuce Unavailable
+			return "", "503", e.MyErr("ADFARQ#FA- Kafka Service Unavailable", err, true)
 		}
 	} else {
-		return "", "K909", err // Server or Network disconnected
+		return "", "503", e.MyErr("QWER!#$%^&*#- Kafka Server or Network disconnected", err, true) //
 	}
 }
 

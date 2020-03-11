@@ -33,8 +33,7 @@ func GrpcRequest(v *AbangoAsk) (string, string, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-
-	// e.Tp(askstr)
+	
 	askstr, _ := json.Marshal(&v)
 	if r, err := c.StdRpc(ctx, &grp1.StdAsk{AskMsg: []byte(askstr)}); err == nil {
 		return string(r.RetMsg), string(r.RetSta), nil

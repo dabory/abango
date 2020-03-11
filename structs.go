@@ -27,11 +27,15 @@ type Controller struct {
 	ServerVars     map[string]string //Fronrt End Server Variables
 	GlobalVars     map[string]string //Fronrt End Global Variables
 	Data           map[interface{}]interface{}
+
+	Access AbangoAccess
+	Db     *xorm.Engine
 }
 
 type Context struct {
-	Ask    AbangoAsk
-	Answer AbangoAnswer
+	Ask         AbangoAsk
+	Answer      AbangoAnswer
+	ReturnTopic string
 }
 
 type AbangoAsk struct {
@@ -44,7 +48,14 @@ type AbangoAsk struct {
 }
 
 type AbangoAnswer struct {
-	Status      []byte
-	Body        []byte
-	ReturnTopic string
+	Body []byte
+}
+
+type AbangoAccess struct {
+	UserId    int64
+	UserGuid  string
+	UserName  string
+	NickName  string
+	DbType    string
+	DbConnStr string
 }
