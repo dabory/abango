@@ -44,6 +44,7 @@ func KafkaSvcStandBy(RouterHandler func(*AbangoAsk)) {
 				case msg := <-consumer.Messages():
 					var v AbangoAsk
 					e.Tp(msg.Value)
+					e.Tp(string(msg.Value))
 					if err := json.Unmarshal(msg.Value, &v); err == nil {
 						e.OkLog("Kafka API [" + v.AskName + "]-[" + topic + "]-[" + v.UniqueId + "]")
 						RouterHandler(&v)
