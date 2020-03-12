@@ -124,6 +124,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error)) error {
 				v.ApiType = XConfig["ApiType"]
 				v.AskName = askname
 				v.UniqueId = unique_id
+				e.Tp(askstr)
 				v.Body = []byte(askstr)
 
 				for i := 0; i < len(v.ServerParams); i++ {

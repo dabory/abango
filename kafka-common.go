@@ -5,7 +5,7 @@ import (
 	e "github.com/dabory/abango/etc"
 )
 
-func KafkaProducer(message string, topic string, conn string, apiMethod string) (int32, int64, error) {
+func It KafkaProducer(message string, topic string, conn string, apiMethod string) (int32, int64, error) {
 
 	kfcf := sarama.NewConfig()
 	kfcf.Producer.Retry.Max = 5
