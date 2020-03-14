@@ -29,7 +29,7 @@ func (c *Controller) Init(ask AbangoAsk) {
 func (c *Controller) KafkaAnswer(body string) {
 
 	// c.Ctx.Answer.Body = []byte(body) // 쓸데없는 것 같은데 나중에 지
-
+	e.Tp("ReturnTopic=" + c.Ctx.ReturnTopic)
 	if _, _, err := KafkaProducer(body,
 		c.Ctx.ReturnTopic, c.ConnString, XConfig["api_method"]); err != nil {
 		e.MyErr("WERRWEEWQRFDFHQW", err, false)
@@ -49,6 +49,7 @@ func (c *Controller) AnswerJson() {
 	} else {
 		ret, _ = json.Marshal(c.Data["json"])
 	}
+	// e.Tp(string(ret))
 
 	if c.Ctx.Ask.ApiType == "Kafka" {
 		c.KafkaAnswer(string(ret))
