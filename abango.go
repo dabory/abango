@@ -140,13 +140,13 @@ func RunEndRequest(docroot string, params string, body string) string {
 	return "Reached to end of RunEndRequest !"
 }
 
-func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *string, params *string, body *string, testModeYes bool) string {
+func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), enddir *string, params *string, body *string, testModeYes bool) string {
 
 	var v AbangoAsk
 	v.UniqueId = e.RandString(20)
 	v.Body = []byte(*body)
-	ioutil.WriteFile(enddir+"abango.log", []byte("K\n"), 0755)
-	jsonsvrparams := *docroot + XConfig["JsonServerParamsPath"]
+	ioutil.WriteFile(*enddir+"abango.log", []byte("K\n"), 0755)
+	jsonsvrparams := *enddir + XConfig["JsonServerParamsPath"]
 	if file, err := os.Open(jsonsvrparams); err == nil {
 		if err = json.NewDecoder(file).Decode(&v.ServerParams); err != nil {
 			return e.MyErr("LAAFDFDFERHYWE", err, true).Error()
@@ -154,7 +154,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *
 	} else {
 		return e.MyErr("LAAFDFDWDERHYWE-"+jsonsvrparams+" File not found", err, true).Error()
 	}
-	ioutil.WriteFile(enddir+"abango.log", []byte("L\n"), 0755)
+	ioutil.WriteFile(*enddir+"abango.log", []byte("L\n"), 0755)
 	if *params != "" { //User Params 있을 경우 해당을 가져온다.
 		var askparmas []Param
 		if err := json.Unmarshal([]byte(*params), &askparmas); err == nil {
@@ -192,13 +192,13 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *
 		v.ApiType = XConfig["ApiType"]
 		v.AskName = askname
 	}
-	ioutil.WriteFile(enddir+"abango.log", []byte("M\n"), 0755)
+	ioutil.WriteFile(*enddir+"abango.log", []byte("M\n"), 0755)
 	if v.ApiType == "" || v.AskName == "" {
 		return e.MyErr("QWERDSFAERQRDA-ApiType or AskName was not specified:", nil, true).Error()
 	}
-	ioutil.WriteFile(enddir+"abango.log", []byte("M\n"), 0755)
+	ioutil.WriteFile(*enddir+"abango.log", []byte("M\n"), 0755)
 	if retstr, retsta, err := MsgHandler(&v); err == nil {
-		ioutil.WriteFile(enddir+"abango.log", []byte("O\n"), 0755)
+		ioutil.WriteFile(*enddir+"abango.log", []byte("O\n"), 0755)
 		if testModeYes == true {
 			jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
 			if XConfig["SaveReceivedJson"] == "Yes" {
