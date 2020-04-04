@@ -100,9 +100,11 @@ func RunEndRequest(docroot string, params string, body string) string {
 
 	w := bufio.NewWriter(f)
 	w.WriteString("This is 1" + "\n")
+	w.Flush()
 
 	if err := GetXConfig(enddir); err == nil {
 		w.WriteString("This is 2" + "\n")
+		w.Flush()
 		if docroot == "" { // golang test mode
 			testModeYes = true
 			askfile := e.GetAskName()
@@ -117,19 +119,17 @@ func RunEndRequest(docroot string, params string, body string) string {
 			}
 		}
 		w.WriteString("This is 3" + "\n")
+		w.Flush()
 		if XConfig["ApiType"] == "Kafka" {
 			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
 			// } else if XConfig["ApiType"] == "gRpc" {
 			// 	return RunRequest(GrpcRequest)
 			// } else if XConfig["ApiType"] == "Rest" {
 			// 	return RunRequest(RestRequest)
-			w.Flush()
 		} else {
-			w.Flush()
 			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
 		}
 	} else {
-		w.Flush()
 		return e.MyErr("XCVZDSFGQWERDZ-Unable to get GetXConfig()", nil, true).Error()
 	}
 	return "Reached to end of RunEndRequest !"
