@@ -95,17 +95,17 @@ func RunEndRequest(docroot string, params string, body string) string {
 		testModeYes = true
 	}
 
-	// f, _ := os.OpenFile(enddir+"my.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
+	// f, _ := os.OpenFile(enddir+"abango.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
 	// defer f.Close()
 
 	// w := bufio.NewWriter(f)
 	// w.WriteString("This is 1" + "\n")
 	// w.Flush()
 
-	ioutil.WriteFile(enddir+"my.log", []byte("This is 1"+"\n"), 0755)
+	ioutil.WriteFile(enddir+"abango.log", []byte("This is 1"+"\n"), 0755)
 
 	if err := GetXConfig(enddir); err == nil {
-		ioutil.WriteFile(enddir+"my.log", []byte("This is 2"+"\n"), 0755)
+		ioutil.WriteFile(enddir+"abango.log", []byte("This is 2"+"\n"), 0755)
 		// w.Flush()
 		if docroot == "" { // golang test mode
 			testModeYes = true
@@ -120,18 +120,18 @@ func RunEndRequest(docroot string, params string, body string) string {
 				return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
 			}
 		}
-		ioutil.WriteFile(enddir+"my.log", []byte("This is 3"+"\n"), 0755)
+		ioutil.WriteFile(enddir+"abango.log", []byte("This is 3"+"\n"), 0755)
 		e.Tp("A")
 		if XConfig["ApiType"] == "Kafka" {
-			ioutil.WriteFile(enddir+"my.log", []byte(docroot+"\n"), 0755)
+			ioutil.WriteFile(enddir+"abango.log", []byte(docroot+"\n"), 0755)
 			e.Tp("B")
-			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
+			return RunRequest(KafkaRequest, &enddir, &params, &body, testModeYes)
 			// } else if XConfig["ApiType"] == "gRpc" {
 			// 	return RunRequest(GrpcRequest)
 			// } else if XConfig["ApiType"] == "Rest" {
 			// 	return RunRequest(RestRequest)
 		} else {
-			ioutil.WriteFile(enddir+"my.log", []byte("This is 3"+"\n"), 0755)
+			ioutil.WriteFile(enddir+"abango.log", []byte("This is 3"+"\n"), 0755)
 			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
 		}
 	} else {
@@ -145,7 +145,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *
 	var v AbangoAsk
 	v.UniqueId = e.RandString(20)
 	v.Body = []byte(*body)
-
+	ioutil.WriteFile(enddir+"abango.log", []byte("K\n"), 0755)
 	jsonsvrparams := *docroot + XConfig["JsonServerParamsPath"]
 	if file, err := os.Open(jsonsvrparams); err == nil {
 		if err = json.NewDecoder(file).Decode(&v.ServerParams); err != nil {
@@ -154,7 +154,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *
 	} else {
 		return e.MyErr("LAAFDFDWDERHYWE-"+jsonsvrparams+" File not found", err, true).Error()
 	}
-
+	ioutil.WriteFile(enddir+"abango.log", []byte("L\n"), 0755)
 	if *params != "" { //User Params 있을 경우 해당을 가져온다.
 		var askparmas []Param
 		if err := json.Unmarshal([]byte(*params), &askparmas); err == nil {
@@ -192,12 +192,13 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *
 		v.ApiType = XConfig["ApiType"]
 		v.AskName = askname
 	}
-
+	ioutil.WriteFile(enddir+"abango.log", []byte("M\n"), 0755)
 	if v.ApiType == "" || v.AskName == "" {
 		return e.MyErr("QWERDSFAERQRDA-ApiType or AskName was not specified:", nil, true).Error()
 	}
-
+	ioutil.WriteFile(enddir+"abango.log", []byte("M\n"), 0755)
 	if retstr, retsta, err := MsgHandler(&v); err == nil {
+		ioutil.WriteFile(enddir+"abango.log", []byte("O\n"), 0755)
 		if testModeYes == true {
 			jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
 			if XConfig["SaveReceivedJson"] == "Yes" {
