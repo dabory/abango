@@ -82,42 +82,43 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 
 func RunEndRequest(docroot string, params string, body string) string {
 
-	testModeYes := false
-	enddir := ""
-	// e.Tp(devdir)
-	if docroot != "" {
-		enddir = e.ParentDir(docroot) + "/"
-	} else {
-		testModeYes = true
-	}
+	return docroot + "//" + params + "//" + body
+	// testModeYes := false
+	// enddir := ""
+	// // e.Tp(devdir)
+	// if docroot != "" {
+	// 	enddir = e.ParentDir(docroot) + "/"
+	// } else {
+	// 	testModeYes = true
+	// }
 
-	if err := GetXConfig(enddir); err == nil {
-		if docroot == "" { // golang test mode
-			testModeYes = true
-			askfile := e.GetAskName()
-			arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
-			askname := arrask[0]
+	// if err := GetXConfig(enddir); err == nil {
+	// 	if docroot == "" { // golang test mode
+	// 		testModeYes = true
+	// 		askfile := e.GetAskName()
+	// 		arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
+	// 		askname := arrask[0]
 
-			jsonsend := enddir + XConfig["JsonSendDir"] + askname + ".json"
+	// 		jsonsend := enddir + XConfig["JsonSendDir"] + askname + ".json"
 
-			var err error
-			if body, err = e.FileToStr(jsonsend); err != nil {
-				return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
-			}
-		}
+	// 		var err error
+	// 		if body, err = e.FileToStr(jsonsend); err != nil {
+	// 			return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
+	// 		}
+	// 	}
 
-		if XConfig["ApiType"] == "Kafka" {
-			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
-			// } else if XConfig["ApiType"] == "gRpc" {
-			// 	return RunRequest(GrpcRequest)
-			// } else if XConfig["ApiType"] == "Rest" {
-			// 	return RunRequest(RestRequest)
-		} else {
-			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
-		}
-	} else {
-		return e.MyErr("XCVZDSFGQWERDZ-Unable to get GetXConfig()", nil, true).Error()
-	}
+	// 	if XConfig["ApiType"] == "Kafka" {
+	// 		return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
+	// 		// } else if XConfig["ApiType"] == "gRpc" {
+	// 		// 	return RunRequest(GrpcRequest)
+	// 		// } else if XConfig["ApiType"] == "Rest" {
+	// 		// 	return RunRequest(RestRequest)
+	// 	} else {
+	// 		return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
+	// 	}
+	// } else {
+	// 	return e.MyErr("XCVZDSFGQWERDZ-Unable to get GetXConfig()", nil, true).Error()
+	// }
 }
 
 func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *string, params *string, body *string, testModeYes bool) string {
