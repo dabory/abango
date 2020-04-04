@@ -83,20 +83,22 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 func RunEndRequest(docroot string, params string, body string) string {
 
 	testModeYes := false
-	devdir := ""
-	// devdir := e.ParentDir(docroot)
+	enddir := ""
 	// e.Tp(devdir)
-	// if devdir != "" {
-	// 	devdir = devdir + "/"
-	// }
-	if err := GetXConfig(); err == nil {
+	if docroot != "" {
+		enddir = e.ParentDir(docroot) + "/"
+	} else {
+		testModeYes = true
+	}
+
+	if err := GetXConfig(enddir); err == nil {
 		if docroot == "" { // golang test mode
 			testModeYes = true
 			askfile := e.GetAskName()
 			arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
 			askname := arrask[0]
 
-			jsonsend := devdir + XConfig["JsonSendDir"] + askname + ".json"
+			jsonsend := enddir + XConfig["JsonSendDir"] + askname + ".json"
 
 			var err error
 			if body, err = e.FileToStr(jsonsend); err != nil {
