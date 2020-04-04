@@ -121,14 +121,17 @@ func RunEndRequest(docroot string, params string, body string) string {
 			}
 		}
 		ioutil.WriteFile(enddir+"my.log", []byte("This is 3"+"\n"), 0755)
-		// w.Flush()
+		e.Tp("A")
 		if XConfig["ApiType"] == "Kafka" {
+			ioutil.WriteFile(enddir+"my.log", []byte(docroot+"\n"), 0755)
+			e.Tp("B")
 			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
 			// } else if XConfig["ApiType"] == "gRpc" {
 			// 	return RunRequest(GrpcRequest)
 			// } else if XConfig["ApiType"] == "Rest" {
 			// 	return RunRequest(RestRequest)
 		} else {
+			ioutil.WriteFile(enddir+"my.log", []byte("This is 3"+"\n"), 0755)
 			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
 		}
 	} else {
