@@ -27,8 +27,6 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	ReturnTopic := v.UniqueId
 
 	askstr, _ := json.Marshal(&v)
-
-	// e.Tp(string(askstr))
 	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
 		TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
 		timeout := int64(TmpInt)

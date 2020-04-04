@@ -9,9 +9,13 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func GetXConfig() error { // Kafka, gRpc, REST 통합 업그레이드
+func GetXConfig(params ...string) error { // Kafka, gRpc, REST 통합 업그레이드
 
 	conf := "conf/"
+	if len(params) != 0 {
+		conf = params[0] + conf
+	}
+
 	RunFilename := conf + "config_select.json"
 
 	run := struct {

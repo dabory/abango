@@ -44,10 +44,6 @@ func init() {
 }
 
 func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), RestHandler func(ask *AbangoAsk)) {
-	// func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), RestHandler func(ask *AbangoAsk)) {
-
-	// KafkaSvcStandBy(KafkaHandler)
-	// GrpcSvcStandBy(GrpcHandler)
 
 	var wg sync.WaitGroup
 
@@ -82,76 +78,118 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 	}
 
 	wg.Wait()
-
 }
 
-func RunEndRequest(params ...string) {
+func RunEndRequest(docroot string, params string, body string) string {
+
+	testModeYes := false
+	devdir := ""
+	// devdir := e.ParentDir(docroot)
+	// e.Tp(devdir)
+	// if devdir != "" {
+	// 	devdir = devdir + "/"
+	// }
 	if err := GetXConfig(); err == nil {
+		if docroot == "" { // golang test mode
+			testModeYes = true
+			askfile := e.GetAskName()
+			arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
+			askname := arrask[0]
+
+			jsonsend := devdir + XConfig["JsonSendDir"] + askname + ".json"
+
+			var err error
+			if body, err = e.FileToStr(jsonsend); err != nil {
+				return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
+			}
+		}
+
 		if XConfig["ApiType"] == "Kafka" {
-			RunRequest(KafkaRequest)
-		} else if XConfig["ApiType"] == "gRpc" {
-			RunRequest(GrpcRequest)
-		} else if XConfig["ApiType"] == "Rest" {
-			RunRequest(RestRequest)
+			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
+			// } else if XConfig["ApiType"] == "gRpc" {
+			// 	return RunRequest(GrpcRequest)
+			// } else if XConfig["ApiType"] == "Rest" {
+			// 	return RunRequest(RestRequest)
 		} else {
-			e.Atp("Error running RunEndPoint")
+			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
 		}
 	} else {
-
+		return e.MyErr("XCVZDSFGQWERDZ-Unable to get GetXConfig()", nil, true).Error()
 	}
-	// e.Atp(XConfig["Dummy"])
 }
 
-func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error)) error {
+func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *string, params *string, body *string, testModeYes bool) string {
 
-	unique_id := e.RandString(20)
+	var v AbangoAsk
+	v.UniqueId = e.RandString(20)
+	v.Body = []byte(*body)
 
-	askfile := e.GetAskName()
-	arrask := strings.Split(askfile, "@") // @앞의 문자를 askname으로 설정
-	askname := arrask[0]
-	apimethod := ""
-	if len(arrask) >= 2 {
-		apimethod = arrask[1]
-	}
-	jsonsend := XConfig["JsonSendDir"] + askname + ".json"
-	jsonreceive := XConfig["JsonReceiveDir"] + askname + ".json"
-	jsonsvrparams := XConfig["JsonServerParamsPath"]
-
+	jsonsvrparams := *docroot + XConfig["JsonServerParamsPath"]
 	if file, err := os.Open(jsonsvrparams); err == nil {
-		var v AbangoAsk
-		if err = json.NewDecoder(file).Decode(&v.ServerParams); err == nil {
-			if askstr, err := e.FileToStr(jsonsend); err == nil {
-				v.ApiType = XConfig["ApiType"]
-				v.AskName = askname
-				v.UniqueId = unique_id
-				// e.Tp(askstr)
-				v.Body = []byte(askstr)
+		if err = json.NewDecoder(file).Decode(&v.ServerParams); err != nil {
+			return e.MyErr("LAAFDFDFERHYWE", err, true).Error()
+		}
+	} else {
+		return e.MyErr("LAAFDFDWDERHYWE-"+jsonsvrparams+" File not found", err, true).Error()
+	}
 
-				for i := 0; i < len(v.ServerParams); i++ {
-					if v.ServerParams[i].Key == "api_method" {
-						v.ServerParams[i].Value = apimethod
-					}
+	if *params != "" { //User Params 있을 경우 해당을 가져온다.
+		var askparmas []Param
+		if err := json.Unmarshal([]byte(*params), &askparmas); err == nil {
+			for _, j := range askparmas {
+				for _, s := range v.ServerParams {
+					if s.Key == j.Key {
+						s.Value = j.Value
+					} // 여기서 api-method 도 처리됨.
 				}
-				if retstr, retsta, err := MsgHandler(&v); err == nil {
-					e.Tp("Status: " + retsta + "  ReturnJsonFile: " + jsonreceive)
-					e.StrToFile(jsonreceive, retstr)
-					if XConfig["ShowReceivedJson"] == "Yes" {
-						e.Tp(retstr)
-					}
-				} else {
-					e.MyErr("QWERDSFAERQRDA-MsgHandler", err, true)
+				if j.Key == "ApiType" { // Ask Params 에 ApiType 이 지정되어 있다면
+					v.ApiType = j.Value
 				}
-			} else {
-				e.MyErr("WERZDSVCZSRE-JsonSendFile", err, true)
+				if j.Key == "AskName" {
+					v.AskName = j.Value
+				}
 			}
 		} else {
-			return e.MyErr("LAAFDFDFERHYWE", err, true)
+			return e.MyErr("WERITOGFSERFDH-AskParams Format mismatched:", nil, true).Error()
 		}
+
 	} else {
-		return e.MyErr("LAAFDFDWDERHYWE-"+jsonsvrparams+" file not found", err, true)
+		askfile := e.GetAskName()
+		arrask := strings.Split(askfile, "@") // @앞의 문자를 askname으로 설정
+		askname := arrask[0]
+		apimethod := ""
+		if len(arrask) >= 2 { //만약 argv[1] 이 login@Kafka 형태라면
+			apimethod = arrask[1]
+		}
+		for i := 0; i < len(v.ServerParams); i++ {
+			if v.ServerParams[i].Key == "api_method" { //GET, POST
+				v.ServerParams[i].Value = apimethod
+			}
+		}
+
+		v.ApiType = XConfig["ApiType"]
+		v.AskName = askname
 	}
 
-	return nil
+	if v.ApiType == "" || v.AskName == "" {
+		return e.MyErr("QWERDSFAERQRDA-ApiType or AskName was not specified:", nil, true).Error()
+	}
+
+	if retstr, retsta, err := MsgHandler(&v); err == nil {
+		if testModeYes == true {
+			jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
+			if XConfig["SaveReceivedJson"] == "Yes" {
+				e.StrToFile(jsonreceive, retstr)
+			}
+			if XConfig["ShowReceivedJson"] == "Yes" {
+				e.Tp("Status: " + retsta + "  ReturnJsonFile: " + jsonreceive)
+				e.Tp(retstr)
+			}
+		}
+		return retstr
+	} else {
+		return e.MyErr("QWERDSFAERQRDA-MsgHandler", err, true).Error()
+	}
 }
 
 func GetEnvConf() error { // Kangan only

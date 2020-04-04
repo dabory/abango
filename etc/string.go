@@ -7,14 +7,11 @@ package etc
 
 import (
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"os"
 	"reflect"
 	"strings"
-	"unicode/utf8"
 )
 
 func RandString(i int) string {
@@ -42,78 +39,6 @@ func GetAskName() string {
 // 	return
 // }
 
-func randString(i int) string {
-	b := make([]byte, i)
-	rand.Read(b)
-	return (base64.URLEncoding.EncodeToString(b))[0:i]
-}
-
-// func randNumber(len int) string { // 나중에 코드 반드시 리팩토링 할 것
-// 	a := make([]int, len)
-// 	for i := 0; i <= len-1; i++ {
-// 		a[i] = rand.Intn(len)
-// 		return strings.Trim(strings.Replace(fmt.Sprint(a), " ", "", -1), "[]")
-// 	}
-// }
-
-func randBytes(i int) []byte {
-	return []byte(randString(i))
-}
-
-func myHash(data []byte, leng int) []byte {
-	hash := sha256.New() //SHA-3 규격임.
-	hash.Write(data)
-
-	mdStr := base64.URLEncoding.EncodeToString(hash.Sum(nil))
-
-	rtn := ""
-	if leng == 0 {
-		rtn = mdStr
-	} else {
-		rtn = mdStr[10 : 10+leng]
-	}
-	return []byte(rtn)
-}
-
-func myToken(leng int) string {
-	b := make([]byte, leng)
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)
-}
-
-func reverseString(s string) string {
-	cs := make([]rune, utf8.RuneCountInString(s))
-	i := len(cs)
-	for _, c := range s {
-		i--
-		cs[i] = c
-	}
-	return string(cs)
-}
-
-func reverseBytes(s []byte) []byte {
-	cs := make([]byte, len(s))
-	i := len(cs)
-	for _, c := range s {
-		i--
-		cs[i] = c
-	}
-	return cs
-}
-
-func getCnt(s []byte, cnt int) []byte {
-	// ret := ""
-	var ret []byte
-	if len(s) > cnt {
-		ret = s[0:cnt]
-	} else if len(s) < cnt {
-		ret = append(s, strings.Repeat("=", cnt-len(s))...)
-	} else {
-		ret = s
-	}
-	return ret
-}
-
 // func structToMap(in interface{}, tag string) (map[string]interface{}, string) {
 // 	out := make(map[string]interface{})
 
@@ -139,28 +64,21 @@ func getCnt(s []byte, cnt int) []byte {
 // 	return out, ""
 // }
 
-func parentDir() string { // Copy시메모리 소모 없슴.
-	workDir, _ := os.Getwd()
-	sp := strings.Split(workDir, "/")
-	parentDir := ""
+func ParentDir(params ...string) string {
+
+	var workdir string
+	if len(params) == 0 {
+		workdir, _ = os.Getwd()
+	} else {
+		workdir = params[0]
+	}
+
+	sp := strings.Split(workdir, "/")
+	parentdir := ""
 	for i := 1; i < len(sp)-1; i++ {
-		parentDir += "/" + sp[i]
+		parentdir += "/" + sp[i]
 	}
-	return parentDir
-}
-
-func getOTp(n int) []byte {
-	const letters = "0123456789"
-	bytes := make([]byte, n)
-	_, err := rand.Read(bytes)
-	if err != nil {
-		MyErr("rand.Read", err, false)
-	}
-
-	for i, b := range bytes {
-		bytes[i] = letters[b%byte(len(letters))]
-	}
-	return bytes
+	return parentdir
 }
 
 // snake string, XxYy to xx_yy , XxYY to xx_yy
