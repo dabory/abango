@@ -1,14 +1,17 @@
 package abango
 
 import (
+	"bufio"
 	"encoding/json"
 	"os"
 	"strings"
 
+	"sync"
+
 	_ "github.com/go-sql-driver/mysql"
+
+	e "github.com/dabory/abango/etc"
 )
-import "sync"
-import e "github.com/dabory/abango/etc"
 
 // type Controller struct {
 // }
@@ -82,43 +85,54 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 
 func RunEndRequest(docroot string, params string, body string) string {
 
-	return docroot + "//" + params + "//" + body
-	// testModeYes := false
-	// enddir := ""
-	// // e.Tp(devdir)
-	// if docroot != "" {
-	// 	enddir = e.ParentDir(docroot) + "/"
-	// } else {
-	// 	testModeYes = true
-	// }
+	// return docroot + "//" + params + "//" + body
+	testModeYes := false
+	enddir := ""
+	// e.Tp(devdir)
+	if docroot != "" {
+		enddir = e.ParentDir(docroot) + "/"
+	} else {
+		testModeYes = true
+	}
 
-	// if err := GetXConfig(enddir); err == nil {
-	// 	if docroot == "" { // golang test mode
-	// 		testModeYes = true
-	// 		askfile := e.GetAskName()
-	// 		arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
-	// 		askname := arrask[0]
+	f, _ := os.OpenFile(enddir+"my.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
+	defer f.Close()
 
-	// 		jsonsend := enddir + XConfig["JsonSendDir"] + askname + ".json"
+	w := bufio.NewWriter(f)
+	w.WriteString("This is 1" + "\n")
 
-	// 		var err error
-	// 		if body, err = e.FileToStr(jsonsend); err != nil {
-	// 			return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
-	// 		}
-	// 	}
+	if err := GetXConfig(enddir); err == nil {
+		w.WriteString("This is 2" + "\n")
+		if docroot == "" { // golang test mode
+			testModeYes = true
+			askfile := e.GetAskName()
+			arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
+			askname := arrask[0]
 
-	// 	if XConfig["ApiType"] == "Kafka" {
-	// 		return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
-	// 		// } else if XConfig["ApiType"] == "gRpc" {
-	// 		// 	return RunRequest(GrpcRequest)
-	// 		// } else if XConfig["ApiType"] == "Rest" {
-	// 		// 	return RunRequest(RestRequest)
-	// 	} else {
-	// 		return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
-	// 	}
-	// } else {
-	// 	return e.MyErr("XCVZDSFGQWERDZ-Unable to get GetXConfig()", nil, true).Error()
-	// }
+			jsonsend := enddir + XConfig["JsonSendDir"] + askname + ".json"
+
+			var err error
+			if body, err = e.FileToStr(jsonsend); err != nil {
+				return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
+			}
+		}
+		w.WriteString("This is 3" + "\n")
+		if XConfig["ApiType"] == "Kafka" {
+			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
+			// } else if XConfig["ApiType"] == "gRpc" {
+			// 	return RunRequest(GrpcRequest)
+			// } else if XConfig["ApiType"] == "Rest" {
+			// 	return RunRequest(RestRequest)
+			w.Flush()
+		} else {
+			w.Flush()
+			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
+		}
+	} else {
+		w.Flush()
+		return e.MyErr("XCVZDSFGQWERDZ-Unable to get GetXConfig()", nil, true).Error()
+	}
+	return "Reached to end of RunEndRequest !"
 }
 
 func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), docroot *string, params *string, body *string, testModeYes bool) string {
