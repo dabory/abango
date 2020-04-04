@@ -1,8 +1,8 @@
 package abango
 
 import (
-	"bufio"
 	"encoding/json"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -95,16 +95,18 @@ func RunEndRequest(docroot string, params string, body string) string {
 		testModeYes = true
 	}
 
-	f, _ := os.OpenFile(enddir+"my.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
-	defer f.Close()
+	// f, _ := os.OpenFile(enddir+"my.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
+	// defer f.Close()
 
-	w := bufio.NewWriter(f)
-	w.WriteString("This is 1" + "\n")
-	w.Flush()
+	// w := bufio.NewWriter(f)
+	// w.WriteString("This is 1" + "\n")
+	// w.Flush()
+
+	ioutil.WriteFile(enddir+"my.log", []byte("This is 1"+"\n"), 0755)
 
 	if err := GetXConfig(enddir); err == nil {
-		w.WriteString("This is 2" + "\n")
-		w.Flush()
+		ioutil.WriteFile(enddir+"my.log", []byte("This is 2"+"\n"), 0755)
+		// w.Flush()
 		if docroot == "" { // golang test mode
 			testModeYes = true
 			askfile := e.GetAskName()
@@ -118,8 +120,8 @@ func RunEndRequest(docroot string, params string, body string) string {
 				return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
 			}
 		}
-		w.WriteString("This is 3" + "\n")
-		w.Flush()
+		ioutil.WriteFile(enddir+"my.log", []byte("This is 3"+"\n"), 0755)
+		// w.Flush()
 		if XConfig["ApiType"] == "Kafka" {
 			return RunRequest(KafkaRequest, &docroot, &params, &body, testModeYes)
 			// } else if XConfig["ApiType"] == "gRpc" {
