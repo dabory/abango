@@ -43,6 +43,7 @@ type AbangoAsk struct {
 	AccessToken  string
 	AskName      string
 	UniqueId     string
+	HomeRoot     string
 	Body         []byte
 	ServerParams []Param
 }
