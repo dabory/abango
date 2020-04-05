@@ -16,6 +16,7 @@ import (
 func KafkaRequest(v *AbangoAsk) (string, string, error) {
 
 	topic := XConfig["KafkaTopic"]
+
 	conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
 	e.MyLog(v.HomeRoot+"abango.log", "C-A")
 	svars := make(map[string]string)
