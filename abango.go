@@ -192,7 +192,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), homeroot 
 	}
 
 	if retstr, retsta, err := MsgHandler(&v); err == nil {
-		ZZ
+
 		if testModeYes == true {
 			jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
 			if XConfig["SaveReceivedJson"] == "Yes" {
