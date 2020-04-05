@@ -17,11 +17,14 @@ func KafkaProducer(message string, topic string, conn string, apiMethod string) 
 	}
 
 	if apiMethod == "ASYNC" {
+		e.MyLog("/home/end_abango/abango.log", "D-A:"+topic)
 		if prd, err := sarama.NewAsyncProducer([]string{conn}, kfcf); err == nil {
+			e.MyLog("/home/end_abango/abango.log", "D-B:"+topic)
 			prd.Input() <- &sarama.ProducerMessage{
 				Topic: topic,
 				Value: sarama.StringEncoder(message), //[]byte doesn't work.
 			}
+			e.MyLog("/home/end_abango/abango.log", "D-C:"+topic)
 			return 0, 0, nil
 		} else {
 			return 0, 0, e.MyErr("QEJHDRTTRRW-Kafka-NewSyncProducer-End", err, true)
