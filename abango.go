@@ -139,7 +139,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), homeroot 
 	v.UniqueId = e.RandString(20)
 	v.Body = []byte(*body)
 	v.HomeRoot = *homeroot
-	e.MyLog(*homeroot+"abango.log", "B-A")
+
 	jsonsvrparams := *homeroot + XConfig["JsonServerParamsPath"]
 	if file, err := os.Open(jsonsvrparams); err == nil {
 		if err = json.NewDecoder(file).Decode(&v.ServerParams); err != nil {
@@ -148,7 +148,7 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), homeroot 
 	} else {
 		return e.MyErr("LAAFDFDWDERHYWE-"+jsonsvrparams+" File not found", err, true).Error()
 	}
-	e.MyLog(*homeroot+"abango.log", "B-B")
+
 	if *params != "" { //User Params 있을 경우 해당을 가져온다.
 		var askparmas []Param
 		if err := json.Unmarshal([]byte(*params), &askparmas); err == nil {
@@ -186,13 +186,13 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), homeroot 
 		v.ApiType = XConfig["ApiType"]
 		v.AskName = askname
 	}
-	e.MyLog(*homeroot+"abango.log", "B-C")
+
 	if v.ApiType == "" || v.AskName == "" {
 		return e.MyErr("QWERDSFAERQRDA-ApiType or AskName was not specified:", nil, true).Error()
 	}
-	e.MyLog(*homeroot+"abango.log", "B-D")
+
 	if retstr, retsta, err := MsgHandler(&v); err == nil {
-		e.MyLog(*homeroot+"abango.log", "B-E")
+		ZZ
 		if testModeYes == true {
 			jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
 			if XConfig["SaveReceivedJson"] == "Yes" {
