@@ -17,10 +17,10 @@ import (
 
 func MyLog(path string, logstr string) error {
 
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0644)
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0777)
 	if err != nil {
-		if err := ioutil.WriteFile(path, []byte("==MyLog begins==\n"), 0644); err == nil {
-			file, _ = os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0644)
+		if err := ioutil.WriteFile(path, []byte("==MyLog begins==\n"), 0777); err == nil {
+			file, _ = os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0777)
 		} else {
 			return MyErr("WERSGYTXZCVNCBH-MyLog file could not be opened: ", err, true)
 		}
