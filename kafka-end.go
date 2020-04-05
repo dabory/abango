@@ -18,13 +18,13 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	topic := XConfig["KafkaTopic"]
 
 	conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
-	e.MyLog(v.HomeRoot+"abango.log", "C-A")
+	// e.MyLog(v.HomeRoot+"abango.log", "C-A")
 	svars := make(map[string]string)
 	for _, p := range v.ServerParams {
 		svars[p.Key] = p.Value
 	}
 	apiMethod := strings.ToUpper(svars["api_method"])
-	e.MyLog(v.HomeRoot+"abango.log", "C-B")
+	// e.MyLog(v.HomeRoot+"abango.log", "C-B")
 	ReturnTopic := v.UniqueId
 
 	askstr, _ := json.Marshal(&v)
@@ -32,9 +32,9 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
 		TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
 		timeout := int64(TmpInt)
-		e.MyLog(v.HomeRoot+"abango.log", "C-C")
+		// e.MyLog(v.HomeRoot+"abango.log", "C-C")
 		if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
-			e.MyLog(v.HomeRoot+"abango.log", "C-D")
+			// e.MyLog(v.HomeRoot+"abango.log", "C-D")
 			return msg, "202", nil // Normal Retrun
 		} else {
 			return "", "503", e.MyErr("ADFARQ#FA- Kafka Service Unavailable", err, true)
