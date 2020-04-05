@@ -8,11 +8,31 @@ package etc
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"runtime"
 	"strings"
 )
+
+func MyLog(path string, logstr string) error {
+
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		if err := ioutil.WriteFile(path, []byte("==MyLog begins==\n"), 0644); err == nil {
+			file, _ = os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0644)
+		} else {
+			return MyErr("WERSGYTXZCVNCBH-MyLog file could not be opened: ", err, true)
+		}
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(logstr + "\n")
+	if err != nil {
+		return MyErr("CXZFDREADSF-MyLog file could not be written: ", err, true)
+	}
+	return nil
+}
 
 func OkLog(s string) {
 	log.Println("[OK]: " + s)
