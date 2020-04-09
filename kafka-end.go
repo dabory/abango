@@ -30,7 +30,7 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	ReturnTopic := v.UniqueId
 	e.Tp(ReturnTopic)
 	askstr, _ := json.Marshal(&v)
-
+	return "this is the message", "333", nil
 	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
 		return "All by myself", "333", nil
 		// TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
