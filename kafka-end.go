@@ -15,8 +15,6 @@ import (
 //////////// Kafka EndPoint /////////////
 func KafkaRequest(v *AbangoAsk) (string, string, error) {
 
-	// return "this is the message", "333", nil
-
 	topic := XConfig["KafkaTopic"]
 
 	conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
@@ -28,20 +26,19 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	apiMethod := strings.ToUpper(svars["api_method"])
 	// e.MyLog(v.HomeRoot+"abango.log", "C-B")
 	ReturnTopic := v.UniqueId
-	e.Tp(ReturnTopic)
+
 	askstr, _ := json.Marshal(&v)
-	// return "this is the message", "333", nil
+
 	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
-		return "All by myself", "333", nil
-		// TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
-		// timeout := int64(TmpInt)
-		// // e.MyLog(v.HomeRoot+"abango.log", "C-C")
-		// if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
-		// 	// e.MyLog(v.HomeRoot+"abango.log", "C-D")
-		// 	return msg, "202", nil // Normal Retrun
-		// } else {
-		// 	return "", "503", e.MyErr("ADFARQ#FA- Kafka Service Unavailable", err, true)
-		// }
+		TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
+		timeout := int64(TmpInt)
+		// e.MyLog(v.HomeRoot+"abango.log", "C-C")
+		if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
+			// e.MyLog(v.HomeRoot+"abango.log", "C-D")
+			return msg, "202", nil // Normal Retrun
+		} else {
+			return "", "503", e.MyErr("ADFARQ#FA- Kafka Service Unavailable", err, true)
+		}
 	} else {
 		return "", "503", e.MyErr("QWER!#$%^&*#- Kafka Server or Network disconnected", err, true) //
 	}
