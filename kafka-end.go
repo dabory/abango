@@ -2,10 +2,8 @@ package abango
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -17,33 +15,33 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 
 	return "this is the message", "333", nil
 
-	topic := XConfig["KafkaTopic"]
+	// topic := XConfig["KafkaTopic"]
 
-	conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
-	// e.MyLog(v.HomeRoot+"abango.log", "C-A")
-	svars := make(map[string]string)
-	for _, p := range v.ServerParams {
-		svars[p.Key] = p.Value
-	}
-	apiMethod := strings.ToUpper(svars["api_method"])
-	// e.MyLog(v.HomeRoot+"abango.log", "C-B")
-	ReturnTopic := v.UniqueId
+	// conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
+	// // e.MyLog(v.HomeRoot+"abango.log", "C-A")
+	// svars := make(map[string]string)
+	// for _, p := range v.ServerParams {
+	// 	svars[p.Key] = p.Value
+	// }
+	// apiMethod := strings.ToUpper(svars["api_method"])
+	// // e.MyLog(v.HomeRoot+"abango.log", "C-B")
+	// ReturnTopic := v.UniqueId
 
-	askstr, _ := json.Marshal(&v)
+	// askstr, _ := json.Marshal(&v)
 
-	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
-		TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
-		timeout := int64(TmpInt)
-		// e.MyLog(v.HomeRoot+"abango.log", "C-C")
-		if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
-			// e.MyLog(v.HomeRoot+"abango.log", "C-D")
-			return msg, "202", nil // Normal Retrun
-		} else {
-			return "", "503", e.MyErr("ADFARQ#FA- Kafka Service Unavailable", err, true)
-		}
-	} else {
-		return "", "503", e.MyErr("QWER!#$%^&*#- Kafka Server or Network disconnected", err, true) //
-	}
+	// if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
+	// 	TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
+	// 	timeout := int64(TmpInt)
+	// 	// e.MyLog(v.HomeRoot+"abango.log", "C-C")
+	// 	if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
+	// 		// e.MyLog(v.HomeRoot+"abango.log", "C-D")
+	// 		return msg, "202", nil // Normal Retrun
+	// 	} else {
+	// 		return "", "503", e.MyErr("ADFARQ#FA- Kafka Service Unavailable", err, true)
+	// 	}
+	// } else {
+	// 	return "", "503", e.MyErr("QWER!#$%^&*#- Kafka Server or Network disconnected", err, true) //
+	// }
 }
 
 func KafkaReturnConsumer(topic string, conn string, timeout int64) (string, error) {
