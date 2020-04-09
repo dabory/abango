@@ -17,7 +17,8 @@ func KafkaProducer(message string, topic string, conn string, apiMethod string) 
 	}
 
 	if apiMethod == "ASYNC" {
-
+		// return "this is the Goddamn message", "333", nil
+		return 0, 0, e.MyErr("this is the Goddamn message", nil, true)
 		if prd, err := sarama.NewAsyncProducer([]string{conn}, kfcf); err == nil {
 
 			prd.Input() <- &sarama.ProducerMessage{
