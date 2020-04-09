@@ -17,9 +17,8 @@ func KafkaProducer(message string, topic string, conn string, apiMethod string) 
 	}
 
 	if apiMethod == "ASYNC" {
-		e.MyLog("/home/end_abango/abango.log", "here-1")
+
 		if prd, err := sarama.NewAsyncProducer([]string{conn}, kfcf); err == nil {
-			e.MyLog("/home/end_abango/abango.log", "here-2")
 
 			prd.Input() <- &sarama.ProducerMessage{
 				Topic: topic,
