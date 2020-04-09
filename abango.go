@@ -84,7 +84,7 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 
 func RunEndRequest(docroot string, params string, body string) string {
 
-	return docroot + "//" + params + "//" + body
+	// return docroot + "//" + params + "//" + body
 	testModeYes := false
 	homeroot := ""
 	// e.Tp(devdir)
