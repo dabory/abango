@@ -28,7 +28,7 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	apiMethod := strings.ToUpper(svars["api_method"])
 	// e.MyLog(v.HomeRoot+"abango.log", "C-B")
 	ReturnTopic := v.UniqueId
-
+	e.Tp(ReturnTopic)
 	askstr, _ := json.Marshal(&v)
 
 	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
