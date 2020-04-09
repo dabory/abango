@@ -15,6 +15,8 @@ import (
 //////////// Kafka EndPoint /////////////
 func KafkaRequest(v *AbangoAsk) (string, string, error) {
 
+	return "this is the message", "333", nil
+
 	topic := XConfig["KafkaTopic"]
 
 	conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
