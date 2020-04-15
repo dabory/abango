@@ -30,7 +30,7 @@ func KafkaRequest(v *AbangoAsk) (string, string, error) {
 	askstr, _ := json.Marshal(&v)
 
 	if _, _, err := KafkaProducer(string(askstr), topic, conn, apiMethod); err == nil {
-		TmpInt, _ := strconv.Atoi(XConfig["KafkaCosumerTimeout"])
+		TmpInt, _ := strconv.Atoi(XConfig["KafkaConsumerTimeout"])
 		timeout := int64(TmpInt)
 		// e.MyLog(v.HomeRoot+"abango.log", "C-C")
 		if msg, err := KafkaReturnConsumer(ReturnTopic, conn, timeout); err == nil {
