@@ -40,10 +40,10 @@ type Context struct {
 
 type AbangoAsk struct {
 	ApiType      string
-	AccessToken  string
 	AskName      string
+	AccessToken  string
 	UniqueId     string
-	HomeRoot     string
+	DocRoot      string
 	Body         []byte
 	ServerParams []Param
 }

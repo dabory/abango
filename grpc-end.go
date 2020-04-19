@@ -3,6 +3,7 @@ package abango
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"time"
 
 	grp1 "github.com/dabory/abango/protos"
@@ -14,9 +15,9 @@ import (
 )
 
 func GrpcRequest(v *AbangoAsk) (string, string, error) {
-
+	log.Println(XConfig["gRpcConnect"])
 	dial, err := grpc.Dial(
-		XConfig["gRpcAddr"]+":"+XConfig["gRpcPort"],
+		XConfig["gRpcConnect"],
 		grpc.WithInsecure(),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
 			Time:                time.Millisecond,
@@ -33,7 +34,7 @@ func GrpcRequest(v *AbangoAsk) (string, string, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-	
+
 	askstr, _ := json.Marshal(&v)
 	if r, err := c.StdRpc(ctx, &grp1.StdAsk{AskMsg: []byte(askstr)}); err == nil {
 		return string(r.RetMsg), string(r.RetSta), nil

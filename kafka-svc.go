@@ -14,7 +14,7 @@ func KafkaSvcStandBy(RouterHandler func(*AbangoAsk)) {
 	kfcf := sarama.NewConfig()
 	kfcf.Consumer.Return.Errors = true
 
-	conn := XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
+	conn := XConfig["KafkaConnect"]
 	brokers := []string{conn}
 
 	// Create new consumer

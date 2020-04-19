@@ -8,33 +8,36 @@ package etc
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"runtime"
 	"strings"
 )
 
-func MyLog(path string, logstr string) error {
+// var InfoLog *log.Logger
 
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0777)
-	if err != nil {
-		if err := ioutil.WriteFile(path, []byte("==MyLog begins==\n"), 0777); err == nil {
-			file, _ = os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0777)
-		} else {
-			return MyErr("WERSGYTXZCVNCBH-MyLog file could not be opened: ", err, true)
-		}
-	}
-	defer file.Close()
+func InitLog(path string, showstdout string) error {
 
-	_, err = file.WriteString(logstr + "\n")
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
-		return MyErr("CXZFDREADSF-MyLog file could not be written: ", err, true)
+		return MyErr("CXZFDREADSF-MyLog file could not be opened: ", err, true)
 	}
+	// defer file.Close()
+	// 파일과 화면에 같이 출력하기 위해 MultiWriter 생성
+
+	if showstdout == "Yes" {
+		multiWriter := io.MultiWriter(file, os.Stdout)
+		log.SetOutput(multiWriter)
+	} else {
+		log.SetOutput(file)
+	}
+	// InfoLog = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	return nil
 }
 
 func OkLog(s string) {
+	// log.Logger
 	log.Println("[OK]: " + s)
 }
 

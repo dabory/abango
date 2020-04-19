@@ -2,6 +2,7 @@ package abango
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"strings"
 
@@ -11,9 +12,6 @@ import (
 
 	e "github.com/dabory/abango/etc"
 )
-
-// type Controller struct {
-// }
 
 type EnvConf struct { //Kangan only
 	AppName      string
@@ -82,49 +80,30 @@ func RunServicePoint(KafkaHandler func(ask *AbangoAsk), GrpcHandler func(), Rest
 	wg.Wait()
 }
 
-func RunEndRequest(docroot string, params string, body string) string {
+func RunEndRequest(params string, body string) string {
 
-	// return docroot + "//" + params + "//" + body
-	testModeYes := false
-	homeroot := ""
-	// e.Tp(devdir)
-	if docroot != "" {
-		homeroot = e.ParentDir(docroot) + "/"
-	} else {
-		testModeYes = true
-	}
+	if err := GetXConfig(); err == nil {
 
-	// f, _ := os.OpenFile(homeroot+"abango.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
-	// defer f.Close()
+		e.InitLog(XConfig["LogFilePath"], XConfig["ShowLogStdout"])
+		log.Print("============ RunEndRequest Begins ==============")
+		askfile := e.GetAskName()
+		arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
+		askname := arrask[0]
 
-	// w := bufio.NewWriter(f)
-	// w.WriteString("This is 1" + "\n")
-	// w.Flush()
+		jsonsend := XConfig["JsonSendDir"] + askname + ".json"
 
-	if err := GetXConfig(homeroot); err == nil {
-		if docroot == "" { // golang test mode
-			testModeYes = true
-			askfile := e.GetAskName()
-			arrask := strings.Split(askfile, "@") // login@post 앞의 문자를 askname으로 설정
-			askname := arrask[0]
-
-			jsonsend := homeroot + XConfig["JsonSendDir"] + askname + ".json"
-
-			var err error
-			if body, err = e.FileToStr(jsonsend); err != nil {
-				return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
-			}
+		var err error
+		if body, err = e.FileToStr(jsonsend); err != nil {
+			return e.MyErr("WERZDSVCZSRE-JsonSendFile Not Found: ", err, true).Error()
 		}
 
 		if XConfig["ApiType"] == "Kafka" {
-			e.MyLog(homeroot+"abango.log", "homeroot="+homeroot)
-			return RunRequest(KafkaRequest, &homeroot, &params, &body, testModeYes)
-			// } else if XConfig["ApiType"] == "gRpc" {
-			// 	return RunRequest(GrpcRequest)
-			// } else if XConfig["ApiType"] == "Rest" {
-			// 	return RunRequest(RestRequest)
+			return RunRequest(KafkaRequest, &params, &body)
+		} else if XConfig["ApiType"] == "gRpc" {
+			return RunRequest(GrpcRequest, &params, &body)
+		} else if XConfig["ApiType"] == "Rest" {
+			return RunRequest(RestRequest, &params, &body)
 		} else {
-			e.MyLog(homeroot+"abango.log", "A-B")
 			return e.MyErr("QREWFGARTEGF-Wrong ApiType in RunEndRequest()", nil, true).Error()
 		}
 	} else {
@@ -133,14 +112,13 @@ func RunEndRequest(docroot string, params string, body string) string {
 	return "Reached to end of RunEndRequest !"
 }
 
-func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), homeroot *string, params *string, body *string, testModeYes bool) string {
+func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), params *string, body *string) string {
 
 	var v AbangoAsk
 	v.UniqueId = e.RandString(20)
 	v.Body = []byte(*body)
-	v.HomeRoot = *homeroot
 
-	jsonsvrparams := *homeroot + XConfig["JsonServerParamsPath"]
+	jsonsvrparams := XConfig["JsonServerParamsPath"]
 	if file, err := os.Open(jsonsvrparams); err == nil {
 		if err = json.NewDecoder(file).Decode(&v.ServerParams); err != nil {
 			return e.MyErr("LAAFDFDFERHYWE", err, true).Error()
@@ -193,16 +171,15 @@ func RunRequest(MsgHandler func(v *AbangoAsk) (string, string, error), homeroot 
 
 	if retstr, retsta, err := MsgHandler(&v); err == nil {
 
-		if testModeYes == true {
-			jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
-			if XConfig["SaveReceivedJson"] == "Yes" {
-				e.StrToFile(jsonreceive, retstr)
-			}
-			if XConfig["ShowReceivedJson"] == "Yes" {
-				e.Tp("Status: " + retsta + "  ReturnJsonFile: " + jsonreceive)
-				e.Tp(retstr)
-			}
+		jsonreceive := XConfig["JsonReceiveDir"] + v.AskName + ".json"
+		if XConfig["SaveReceivedJson"] == "Yes" {
+			e.StrToFile(jsonreceive, retstr)
 		}
+		if XConfig["ShowReceivedJson"] == "Yes" {
+			e.Tp("Status: " + retsta + "  ReturnJsonFile: " + jsonreceive)
+			e.Tp(retstr)
+		}
+
 		return retstr
 	} else {
 		return e.MyErr("QWERDSFAERQRDA-MsgHandler", err, true).Error()

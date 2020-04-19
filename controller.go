@@ -16,7 +16,7 @@ func (c *Controller) Init(ask AbangoAsk) {
 	c.Data = make(map[interface{}]interface{})
 
 	c.Ctx.Ask = ask
-	c.ConnString = XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"]
+	c.ConnString = XConfig["KafkaConnect"]
 	c.Ctx.ReturnTopic = c.Ctx.Ask.UniqueId
 
 	for _, p := range c.Ctx.Ask.ServerParams {

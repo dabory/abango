@@ -55,10 +55,10 @@ func GetXConfig(params ...string) error { // Kafka, gRpc, REST 통합 업그레�
 	}
 
 	if XConfig["KafkaOn"] == "Yes" || XConfig["ApiType"] == "Kafka" {
-		e.Tp("==" + "Config file prefix: " + run.ConfSelect + "== Kafka Connection: " + XConfig["KafkaAddr"] + ":" + XConfig["KafkaPort"] + "==")
+		e.Tp("==" + "Config file prefix: " + run.ConfSelect + "== Kafka Connection: " + XConfig["KafkaConnect"] + "==")
 	}
 	if XConfig["gRpcOn"] == "Yes" || XConfig["ApiType"] == "gRpc" {
-		e.Tp("==" + "Config file prefix: " + run.ConfSelect + "== gRpc Connection: " + XConfig["gRpcAddr"] + ":" + XConfig["gRpcPort"] + "==")
+		e.Tp("==" + "Config file prefix: " + run.ConfSelect + "== gRpc Connection: " + XConfig["gRpcConnect"] + "==")
 	}
 	if XConfig["RestOn"] == "Yes" || XConfig["ApiType"] == "Rest" {
 		e.Tp("==" + "Config file prefix: " + run.ConfSelect + "== REST Connection: " + XConfig["RestConnect"] + "==")
